@@ -1,5 +1,5 @@
 {
- "project": "Tweet Sentiment LSTM",
+ "assignment": "Tweet Sentiment LSTM",
  "task": "3-class tweet sentiment classification",
  "labels": [
   "negative",
@@ -77,6 +77,11 @@
   "accuracy_keras_first_2000": 0.64,
   "accuracy_int8_first_2000": 0.6415
  },
- "links": {},
+ "links": {
+  "github": "https://github.com/mdk-aarbi/tweet-sentiment-lstm",
+  "report": "https://github.com/mdk-aarbi/tweet-sentiment-lstm/blob/main/Assignment_Report.pdf",
+  "slides": "https://claude.ai/artifact/5FMzwoKnLn8Y2QHNqinDAq",
+  "dataset": "https://drive.google.com/file/d/1WandK1pMuvHDLzBgZ--LzfOS7Lv_BcaL/view?usp=drivesdk"
+ },
  "demo": "https://tweet-sentiment-lstm.vercel.app"
 }

@@ -1,6 +1,6 @@
 # Tweet Sentiment LSTM
 
-Three-class tweet sentiment analysis (negative, neutral, positive) with LSTMs. Deep Learning course project, Superior University, Lahore.
+Three-class tweet sentiment analysis (negative, neutral, positive) with LSTMs. Deep Learning course assignment, Superior University, Lahore.
 A bidirectional LSTM trained from scratch (Model A) is compared with the same network using frozen GloVe Twitter 100d embeddings (Model B).
 The trained model also runs in the browser: **https://tweet-sentiment-lstm.vercel.app**
 
@@ -24,14 +24,17 @@ TweetEval sentiment (`cardiffnlp/tweet_eval`, config `sentiment`): 45,615 train,
 - `index.html`, `weights.bin`, `manifest.json`, `vocab.json` the browser demo (plain JavaScript, no server)
 - `llms.txt`, `results.json`, `robots.txt`, `sitemap.xml` files for search engines and AI agents
 - `predict.py` command line prediction: `python predict.py "your tweet here"`
-- `Project_Report.pdf` the project report
+- `Assignment_Report.pdf` the assignment report
 
 ## Reproduce
 Open the notebook in Google Colab and run all cells. Training takes a few minutes on a GPU runtime. Exact numbers can differ slightly between runs and hardware.
 
 ## Links
 - Live demo: https://tweet-sentiment-lstm.vercel.app
-- (added when published)
+- GitHub repository: https://github.com/mdk-aarbi/tweet-sentiment-lstm
+- Assignment report: https://github.com/mdk-aarbi/tweet-sentiment-lstm/blob/main/Assignment_Report.pdf
+- Presentation: https://claude.ai/artifact/5FMzwoKnLn8Y2QHNqinDAq
+- Full dataset: https://drive.google.com/file/d/1WandK1pMuvHDLzBgZ--LzfOS7Lv_BcaL/view?usp=drivesdk
 
 ## Credits
 - Barbieri et al. (2020). TweetEval: Unified Benchmark and Comparative Evaluation for Tweet Classification. Findings of EMNLP.
