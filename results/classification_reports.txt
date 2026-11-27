@@ -1,0 +1,22 @@
+A_scratch
+              precision    recall  f1-score   support
+
+    negative      0.586     0.571     0.579      3972
+     neutral      0.619     0.683     0.649      5937
+    positive      0.630     0.492     0.553      2375
+
+    accuracy                          0.610     12284
+   macro avg      0.612     0.582     0.594     12284
+weighted avg      0.610     0.610     0.608     12284
+
+
+B_glove
+              precision    recall  f1-score   support
+
+    negative      0.642     0.642     0.642      3972
+     neutral      0.646     0.666     0.656      5937
+    positive      0.603     0.556     0.579      2375
+
+    accuracy                          0.637     12284
+   macro avg      0.631     0.622     0.626     12284
+weighted avg      0.637     0.637     0.637     12284

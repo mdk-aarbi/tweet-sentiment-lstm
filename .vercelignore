@@ -1,0 +1,8 @@
+models/
+data/
+notebook/
+results/
+Project_Report.pdf
+predict.py
+requirements.txt
+README.md

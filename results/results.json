@@ -1,0 +1,82 @@
+{
+ "project": "Tweet Sentiment LSTM",
+ "task": "3-class tweet sentiment classification",
+ "labels": [
+  "negative",
+  "neutral",
+  "positive"
+ ],
+ "author": "Muhammad Danial Khalid",
+ "institution": "Superior University, Lahore",
+ "course": "Deep Learning",
+ "date": "2026-11",
+ "dataset": {
+  "name": "TweetEval sentiment",
+  "source": "https://huggingface.co/datasets/cardiffnlp/tweet_eval",
+  "train": 45615,
+  "validation": 2000,
+  "test": 12284,
+  "test_class_share": {
+   "negative": 0.3233,
+   "neutral": 0.4833,
+   "positive": 0.1933
+  }
+ },
+ "baseline_always_neutral_accuracy": 0.4833,
+ "glove_vocabulary_coverage": 0.8785,
+ "models": {
+  "A_bilstm_random_embeddings": {
+   "test_accuracy": 0.6101,
+   "test_macro_f1": 0.5935,
+   "confusion_matrix_rows_true_cols_predicted": [
+    [
+     2269,
+     1535,
+     168
+    ],
+    [
+     1361,
+     4057,
+     519
+    ],
+    [
+     242,
+     964,
+     1169
+    ]
+   ]
+  },
+  "B_bilstm_frozen_glove_twitter_100d": {
+   "test_accuracy": 0.6373,
+   "test_macro_f1": 0.6257,
+   "confusion_matrix_rows_true_cols_predicted": [
+    [
+     2551,
+     1272,
+     149
+    ],
+    [
+     1261,
+     3956,
+     720
+    ],
+    [
+     162,
+     892,
+     1321
+    ]
+   ]
+  }
+ },
+ "architecture": "TextVectorization(20000 tokens, 50 length) -> Embedding(20000,100,mask_zero) -> Bidirectional LSTM(64) -> Dropout(0.5) -> Dense(3, softmax). Model B embedding is GloVe Twitter 100d, frozen.",
+ "browser_inference": "Pure JavaScript, int8-quantised embedding table, weights.bin about 2.4 MB, no server.",
+ "export_check": {
+  "max_prob_diff_keras_vs_numpy": 2.384185791015625e-07,
+  "agreement_keras_vs_numpy": 1.0,
+  "agreement_keras_vs_int8": 0.9935,
+  "accuracy_keras_first_2000": 0.64,
+  "accuracy_int8_first_2000": 0.6415
+ },
+ "links": {},
+ "demo": "https://tweet-sentiment-lstm.vercel.app"
+}

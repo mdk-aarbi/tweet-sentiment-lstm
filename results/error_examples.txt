@@ -1,0 +1,12 @@
+true=negative pred=neutral  | As Soon As Mike Pence Posted This Photo, We Knew There Was Something Terribly Wrong. Do You See It?
+true=negative pred=neutral  | Discover The Many Dangers Of Vaccines and Vaccination
+true=negative pred=neutral  | A reminder to the leftists who kept calling for #1A for 8 yrs to be regulated and ban words bc who of who said it n…
+true=neutral  pred=positive | Dear writers of westworld: Please make Dolores say more things like 'if out there is so great, why are you clamoring to get in here?'
+true=negative pred=neutral  | The man who insanely claimed #BLM would team up with #ISIS is set to meet with Trump on Monday.
+true=neutral  pred=negative | So youa ve saved for retirement. Did you think about these 3 things?
+true=neutral  pred=negative | @user I just read a tweet about a woman in Florida who voted for him but relies on Obamacare for her MS..and she hopes it stays the same
+true=negative pred=neutral  | Aiya won't see this face for awhile and obsess over Melania's speech together !1!1!!
+true=neutral  pred=negative | @user Why can't the ideologue for Black folks be the maximize our voting block by funding voter registration & getting out the vote
+true=positive pred=neutral  | Oh the Westworld finale is a feature-length film?Cool.**pours tall whiskey, puts on seat belt**
+true=neutral  pred=negative | @user the people of #Britain already voted #Brexit should be under way already if #UK really is a 'democracy'......
+true=negative pred=neutral  | @user @user America will move on when White Supremacists aren't running emboldened throughout the country.

@@ -1,0 +1,23 @@
+# Tweet Sentiment LSTM
+
+> A bidirectional LSTM that classifies English tweets as positive, negative or neutral. Trained on the public TweetEval sentiment benchmark. Compares random embeddings (Model A) with frozen GloVe Twitter 100d embeddings (Model B). Runs entirely in the browser with no server. University project for a Deep Learning course by Muhammad Danial Khalid, BSCS, Superior University, Lahore (November 2026).
+
+## Results (test set, 12,284 tweets)
+- Always guess neutral: accuracy 48.33%
+- Model A, BiLSTM random embeddings: accuracy 61.01%, macro-F1 0.5935
+- Model B, BiLSTM frozen GloVe Twitter: accuracy 63.73%, macro-F1 0.6257
+
+## Data
+- TweetEval sentiment (cardiffnlp/tweet_eval): 45,615 train, 2,000 validation, 12,284 test. Labels: negative, neutral, positive. Not collected by the author.
+
+## Model
+- TextVectorization (20,000 tokens, length 50) -> Embedding(20000,100) -> Bidirectional LSTM(64) -> Dropout(0.5) -> Dense(3, softmax).
+- Browser inference in plain JavaScript: weights.bin (about 2.4 MB, int8-quantised embeddings), manifest.json, vocab.json.
+
+## Links
+- Live demo: https://tweet-sentiment-lstm.vercel.app/
+- Machine-readable results: https://tweet-sentiment-lstm.vercel.app/results.json
+- (other links are added here when published)
+
+## How to query the model from a page
+After the page loads, window.__ready is true and window.__predict("some tweet") returns {negative, neutral, positive} probabilities.

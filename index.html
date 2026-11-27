@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tweet Sentiment LSTM: positive, negative or neutral tweets, in your browser</title>
+<meta name="description" content="Bidirectional LSTM tweet sentiment classifier (positive, negative, neutral) trained on TweetEval. Compares random embeddings with frozen GloVe Twitter vectors: 63.73% test accuracy, macro-F1 0.6257. Runs fully in the browser.">
+<meta name="author" content="Muhammad Danial Khalid">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tweet-sentiment-lstm.vercel.app/">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt">
+<link rel="alternate" type="application/json" href="/results.json" title="results.json">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tweet Sentiment LSTM">
+<meta property="og:description" content="Two LSTMs, one tweet: random vs GloVe embeddings on TweetEval. Try it in your browser.">
+<meta property="og:url" content="https://tweet-sentiment-lstm.vercel.app/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Tweet Sentiment LSTM", "url": "https://tweet-sentiment-lstm.vercel.app", "description": "Bidirectional LSTM that classifies tweets as positive, negative or neutral, trained on TweetEval. Runs entirely in the browser. Test accuracy 63.73%, macro-F1 0.6257.", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any (web browser)", "inLanguage": "en", "author": {"@type": "Person", "name": "Muhammad Danial Khalid", "affiliation": {"@type": "CollegeOrUniversity", "name": "Superior University, Lahore"}}, "isBasedOn": {"@type": "Dataset", "name": "TweetEval sentiment", "url": "https://huggingface.co/datasets/cardiffnlp/tweet_eval"}, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "sameAs": []}</script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#141815;color:#EDEDE6;font:16px/1.65 Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.w{max-width:1152px;margin:0 auto;padding:0 24px}section{padding-top:64px}h1,h2,h3{font-family:"Space Grotesk",Inter,system-ui,sans-serif;letter-spacing:-.01em;margin:0}
+h1{font-size:clamp(34px,6vw,60px);line-height:1.08;max-width:900px}h2{font-size:clamp(26px,4vw,36px);margin-bottom:10px}h3{font-size:21px;margin-bottom:8px}
+p{margin:0 0 12px;color:#A3A89F}.eyebrow{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#9BE3C0;font-weight:600;margin:64px 0 20px}
+.lead{font-size:19px;max-width:760px;margin:22px 0}.row{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;min-height:48px;padding:0 22px;border-radius:12px;background:#1B201C;border:1px solid #2F3731;color:#EDEDE6;font:500 16px Inter,system-ui,sans-serif;text-decoration:none;cursor:pointer}
+.btn:hover{background:#262d28;border-color:#4a5a4f}.btn.sm{min-height:44px;font-size:15px;padding:0 18px}.btn:focus-visible,button:focus-visible,textarea:focus-visible{outline:2px solid #9BE3C0;outline-offset:2px}
+.go{background:#9BE3C0;color:#0F1411;font-weight:600;border-color:#9BE3C0}.go:hover{background:#b6efd2}
+hr{border:0;border-top:1px solid #2A312C;margin:36px 0 0}.panel,.card{background:#1B201C;border:1px solid #2A312C;border-radius:16px;padding:24px}
+.demo{display:flex;flex-wrap:wrap;gap:32px;padding:28px}.demo>div{flex:1 1 320px;min-width:0}
+label{display:block;font-size:14px;font-weight:600;color:#A3A89F;margin-bottom:8px}
+textarea{width:100%;background:#141815;border:1px solid #2F3731;border-radius:12px;padding:16px;color:#EDEDE6;font:17px/1.5 Inter,system-ui,sans-serif;resize:vertical}
+.chip{min-height:44px;padding:0 16px;border-radius:999px;background:transparent;border:1px solid #2F3731;color:#A3A89F;font:14px Inter,system-ui,sans-serif;cursor:pointer}.chip:hover{border-color:#4a5a4f;color:#EDEDE6}
+.bar{margin-bottom:16px}.bar .l{display:flex;justify-content:space-between;font-size:15px}.bar .t{height:12px;border-radius:6px;background:#262d28;margin-top:6px}.bar .f{height:12px;border-radius:6px;width:0;transition:width .3s}
+#verdict{font:700 26px "Space Grotesk",sans-serif;margin:0 0 18px;min-height:34px;color:#EDEDE6}
+.grid{display:flex;flex-wrap:wrap;gap:16px}.grid>*{flex:1 1 300px;min-width:0}.num{font:700 40px "Space Grotesk",sans-serif;color:#9BE3C0;line-height:1.2}
+.split{display:flex;height:18px;border-radius:9px;overflow:hidden;margin:12px 0}.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px}caption{text-align:left;color:#A3A89F;padding:0 0 10px;font-size:14px}th,td{padding:12px 16px;text-align:left;border-top:1px solid #2A312C}thead th{color:#A3A89F;font-weight:600;border-top:0}tr.best td,tr.best th{background:#202722;font-weight:600}
+.tag{font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}footer{margin-top:72px;padding:28px 0 48px;border-top:1px solid #2A312C;font-size:14px;color:#A3A89F}
+a{color:#9BE3C0}.btn,.btn:hover{text-decoration:none}
+</style>
+</head>
+<body>
+<header class="w">
+<p class="eyebrow">Deep Learning project · Twitter text · RNN / LSTM</p>
+<h1>Positive, negative or neutral? Two LSTMs, one tweet.</h1>
+<p class="lead">A sentiment classifier for tweets: a bidirectional LSTM trained from scratch, and the same network with frozen GloVe Twitter word vectors, compared on the public TweetEval benchmark. The model runs directly in your browser, so your text never leaves your device.</p>
+<nav class="row" aria-label="Project links"><a class="btn" href="#demo">Try the live demo</a></nav>
+<hr>
+</header>
+<main class="w">
+<section id="demo" aria-labelledby="h-demo">
+<h2 id="h-demo">Try it on your own tweet</h2>
+<p>Type or paste a tweet. The model returns a probability for each class. It works best on English tweets.</p>
+<form class="panel demo" id="f" onsubmit="return false">
+<div>
+<label for="tw">Tweet</label>
+<textarea id="tw" name="tweet" rows="4" maxlength="400">Just landed in Lahore and the weather is perfect, best trip so far!</textarea>
+<div class="row" style="margin-top:14px;align-items:center">
+<button class="btn go" id="go" type="submit">Analyze</button>
+<button class="chip" type="button" data-t="Just landed in Lahore and the weather is perfect, best trip so far!">Example: positive</button>
+<button class="chip" type="button" data-t="Two hours late again and nobody at the airline desk will even look at us. Awful service.">Example: negative</button>
+<button class="chip" type="button" data-t="The match starts at 7pm on Saturday at the national stadium.">Example: neutral</button>
+</div>
+</div>
+<div role="status" aria-live="polite">
+<p id="verdict">Loading model (2.4 MB)...</p>
+<div class="bar"><div class="l"><span>Positive</span><span id="vp">0%</span></div><div class="t"><div class="f" id="bp" style="background:#7BC9A0"></div></div></div>
+<div class="bar"><div class="l"><span>Neutral</span><span id="vn">0%</span></div><div class="t"><div class="f" id="bn" style="background:#8FA9C4"></div></div></div>
+<div class="bar"><div class="l"><span>Negative</span><span id="vg">0%</span></div><div class="t"><div class="f" id="bg" style="background:#E8896B"></div></div></div>
+</div>
+</form>
+<noscript><p>This demo needs JavaScript. All results are also listed below and in <a href="/results.json">results.json</a>.</p></noscript>
+</section>
+<section id="data" aria-labelledby="h-data">
+<h2 id="h-data">The data</h2>
+<p>TweetEval sentiment is a public benchmark of English tweets labelled positive, negative or neutral. I did not collect it myself. I used the official splits and kept the test set untouched until the final evaluation.</p>
+<div class="grid">
+<div class="card"><div class="num">45,615</div>training tweets</div>
+<div class="card"><div class="num">2,000</div>validation tweets</div>
+<div class="card"><div class="num">12,284</div>test tweets, never seen in training</div>
+</div>
+<div class="panel" style="margin-top:16px">
+<strong>Test set class balance</strong>
+<div class="split" role="img" aria-label="Test set: neutral 48.3%, negative 32.3%, positive 19.3%"><div style="width:48.33%;background:#8FA9C4"></div><div style="width:32.33%;background:#E8896B"></div><div style="width:19.33%;background:#7BC9A0"></div></div>
+<p>Neutral 48.3% · Negative 32.3% · Positive 19.3%. Always guessing "neutral" already scores 48.33%, so any model has to beat that to be useful.</p>
+</div>
+</section>
+<section id="models" aria-labelledby="h-models">
+<h2 id="h-models">Two models, same data</h2>
+<div class="grid">
+<article class="card"><div class="tag" style="color:#E8896B">Model A · from scratch</div><h3>BiLSTM, random embeddings</h3><p>Embedding (20,000 words, 100 dimensions, learned from zero), bidirectional LSTM with 64 units, dropout 0.5, softmax over 3 classes. Early stopping on validation loss.</p></article>
+<article class="card"><div class="tag" style="color:#7BC9A0">Model B · pretrained vectors</div><h3>BiLSTM, frozen GloVe Twitter</h3><p>The same network, but the embedding layer is initialised from GloVe Twitter 100d and frozen. 87.9% of the vocabulary has a pretrained vector.</p></article>
+</div>
+</section>
+<section id="results" aria-labelledby="h-res">
+<h2 id="h-res">Results on the unseen test set</h2>
+<p>Macro-F1 averages the three classes equally, so a model cannot hide behind the big neutral class.</p>
+<div class="panel tw"><table><caption>Test set results (12,284 tweets)</caption>
+<thead><tr><th scope="col">Model</th><th scope="col">Accuracy</th><th scope="col">Macro-F1</th></tr></thead>
+<tbody>
+<tr><th scope="row">Always guess neutral</th><td>48.33%</td><td>n/a</td></tr>
+<tr><th scope="row">A: BiLSTM from scratch</th><td>61.01%</td><td>0.5935</td></tr>
+<tr class="best"><th scope="row">B: BiLSTM + frozen GloVe</th><td>63.73%</td><td>0.6257</td></tr>
+</tbody></table></div>
+<div class="grid" style="margin-top:16px">
+<div class="panel tw"><table><caption>Model A: confusion matrix on the test set (rows true, columns predicted)</caption><thead><tr><th scope="col">True / predicted</th><th scope="col">negative</th><th scope="col">neutral</th><th scope="col">positive</th></tr></thead><tbody><tr><th scope="row">negative</th><td>2269</td><td>1535</td><td>168</td></tr><tr><th scope="row">neutral</th><td>1361</td><td>4057</td><td>519</td></tr><tr><th scope="row">positive</th><td>242</td><td>964</td><td>1169</td></tr></tbody></table></div>
+<div class="panel tw"><table><caption>Model B: confusion matrix on the test set (rows true, columns predicted)</caption><thead><tr><th scope="col">True / predicted</th><th scope="col">negative</th><th scope="col">neutral</th><th scope="col">positive</th></tr></thead><tbody><tr><th scope="row">negative</th><td>2551</td><td>1272</td><td>149</td></tr><tr><th scope="row">neutral</th><td>1261</td><td>3956</td><td>720</td></tr><tr><th scope="row">positive</th><td>162</td><td>892</td><td>1321</td></tr></tbody></table></div>
+</div>
+<div class="panel" style="margin-top:16px"><h3>Where the model gets it wrong</h3>
+<p>Model B made 4,456 mistakes on the test set. 44% of them were truly neutral tweets labelled positive or negative, and 49% were positive or negative tweets predicted as neutral. The sampled examples show why: headlines and questions carrying charged topic words, and feelings that are implied rather than stated. The model reads words, not context, so it has no real handle on sarcasm, news framing or who a feeling is aimed at.</p>
+<p>Frozen GloVe vectors changed accuracy by +2.7 points and macro-F1 by +0.032 compared with random embeddings. This comes from a single seeded run, so differences of a point or less should not be over-read.</p></div>
+</section>
+<section id="resources" aria-labelledby="h-res2">
+<h2 id="h-res2">Everything in one place</h2>
+<div class="grid"><article class="card"><h3>Machine-readable results</h3><p>All numbers on this page as JSON: dataset sizes, both models, confusion matrices and architecture.</p><a class="btn sm" href="/results.json">Open results.json</a></article><article class="card"><h3>llms.txt</h3><p>A plain-text summary of this project for AI assistants and agents, with every link and file.</p><a class="btn sm" href="/llms.txt">Open llms.txt</a></article></div>
+</section>
+</main>
+<footer><div class="w"><div class="row" style="justify-content:space-between"><span>Muhammad Danial Khalid · BSCS, Superior University, Lahore</span><span>Deep Learning course · November 2026</span></div></div></footer>
+<script type="application/json" id="results-data">{"project": "Tweet Sentiment LSTM", "task": "3-class tweet sentiment classification", "labels": ["negative", "neutral", "positive"], "author": "Muhammad Danial Khalid", "institution": "Superior University, Lahore", "course": "Deep Learning", "date": "2026-11", "dataset": {"name": "TweetEval sentiment", "source": "https://huggingface.co/datasets/cardiffnlp/tweet_eval", "train": 45615, "validation": 2000, "test": 12284, "test_class_share": {"negative": 0.3233, "neutral": 0.4833, "positive": 0.1933}}, "baseline_always_neutral_accuracy": 0.4833, "glove_vocabulary_coverage": 0.8785, "models": {"A_bilstm_random_embeddings": {"test_accuracy": 0.6101, "test_macro_f1": 0.5935, "confusion_matrix_rows_true_cols_predicted": [[2269, 1535, 168], [1361, 4057, 519], [242, 964, 1169]]}, "B_bilstm_frozen_glove_twitter_100d": {"test_accuracy": 0.6373, "test_macro_f1": 0.6257, "confusion_matrix_rows_true_cols_predicted": [[2551, 1272, 149], [1261, 3956, 720], [162, 892, 1321]]}}, "architecture": "TextVectorization(20000 tokens, 50 length) -> Embedding(20000,100,mask_zero) -> Bidirectional LSTM(64) -> Dropout(0.5) -> Dense(3, softmax). Model B embedding is GloVe Twitter 100d, frozen.", "browser_inference": "Pure JavaScript, int8-quantised embedding table, weights.bin about 2.4 MB, no server.", "export_check": {"max_prob_diff_keras_vs_numpy": 2.384185791015625e-07, "agreement_keras_vs_numpy": 1.0, "agreement_keras_vs_int8": 0.9935, "accuracy_keras_first_2000": 0.64, "accuracy_int8_first_2000": 0.6415}, "links": {}, "demo": "https://tweet-sentiment-lstm.vercel.app"}</script>
+<script>
+(function(){
+const PUNCT=/[!"#$%&'()*+,\-./:;<=>?@\[\\\]^_\x60{|}~]/g;
+const $=id=>document.getElementById(id);let M=null;
+const sg=x=>1/(1+Math.exp(-x));
+function tok(t){return t.toLowerCase().replace(PUNCT,"").split(/\s+/).filter(Boolean).slice(0,50)}
+function run(ids,K,Rr,b){const U=M.U,D=M.D,G=4*U;const h=new Float32Array(U),c=new Float32Array(U),x=new Float32Array(D),z=new Float32Array(G);
+for(const id of ids){const s=M.sc[id],base=id*D;for(let i=0;i<D;i++)x[i]=M.emb[base+i]*s;for(let j=0;j<G;j++)z[j]=b[j];
+for(let i=0;i<D;i++){const xv=x[i],o=i*G;for(let j=0;j<G;j++)z[j]+=xv*K[o+j]}
+for(let k=0;k<U;k++){const hv=h[k],o=k*G;for(let j=0;j<G;j++)z[j]+=hv*Rr[o+j]}
+for(let k=0;k<U;k++){const ig=sg(z[k]),fg=sg(z[U+k]),gg=Math.tanh(z[2*U+k]),og=sg(z[3*U+k]);c[k]=fg*c[k]+ig*gg;h[k]=og*Math.tanh(c[k])}}
+return h}
+function predict(text){const ids=tok(text).map(w=>M.idx.has(w)?M.idx.get(w):1);if(!ids.length)return null;
+const hf=run(ids,M.fK,M.fR,M.fb),hb=run(ids.slice().reverse(),M.bK,M.bR,M.bb);const h=Array.from(hf).concat(Array.from(hb));
+const z=[0,1,2].map(k=>{let s=M.db[k];for(let i=0;i<h.length;i++)s+=h[i]*M.dW[i*3+k];return s});
+const m=Math.max(z[0],z[1],z[2]),e=z.map(v=>Math.exp(v-m)),t=e[0]+e[1]+e[2];return e.map(v=>v/t)}
+function show(p){const names=["Negative","Neutral","Positive"],ids=["bg","bn","bp"],vs=["vg","vn","vp"];
+if(!p){$("verdict").textContent="Type a tweet first.";return}
+p.forEach((v,i)=>{$(ids[i]).style.width=(v*100).toFixed(1)+"%";$(vs[i]).textContent=(v*100).toFixed(1)+"%"});
+const k=p.indexOf(Math.max(p[0],p[1],p[2]));$("verdict").textContent=names[k]}
+function go(){if(M)show(predict($("tw").value))}
+async function load(){const man=await fetch("manifest.json").then(r=>r.json());
+const r=await Promise.all([fetch("vocab.json").then(r=>r.json()),fetch("weights.bin").then(r=>r.arrayBuffer())]);const vocab=r[0],buf=r[1];
+const R=man.emb_rows,D=man.emb_dim;const f=n=>new Float32Array(buf,man.arrays[n].offset,man.arrays[n].length);
+const idx=new Map();vocab.forEach((w,i)=>{if(!idx.has(w))idx.set(w,i)});
+M={idx:idx,emb:new Int8Array(buf,0,R*D),sc:f("emb_scale"),fK:f("fK"),fR:f("fR"),fb:f("fb"),bK:f("bK"),bR:f("bR"),bb:f("bb"),dW:f("dW"),db:f("db"),D:D};M.U=M.dW.length/6;
+window.__predict=function(t){const p=predict(t);return p&&{negative:p[0],neutral:p[1],positive:p[2]}};window.__ready=true;go()}
+$("f").addEventListener("submit",go);$("go").addEventListener("click",go);
+document.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{$("tw").value=b.dataset.t;go()}));
+load().catch(e=>{$("verdict").textContent="Could not load the model: "+e.message});
+})();
+</script>
+</body>
+</html>
