@@ -40,4 +40,5 @@ Open the notebook in Google Colab and run all cells. Training takes a few minute
 - Barbieri et al. (2020). TweetEval: Unified Benchmark and Comparative Evaluation for Tweet Classification. Findings of EMNLP.
 - Rosenthal, Farra, Nakov (2017). SemEval-2017 Task 4: Sentiment Analysis in Twitter.
 - Pennington, Socher, Manning (2014). GloVe: Global Vectors for Word Representation.
-- LinkedIn post: https://www.linkedin.com/feed/update/urn:li:activity:7532068129993089024/
+- LinkedIn post: https://lnkd.in/p/dszaAT5e
+- Video: https://youtu.be/0Ca7wmUae0E
