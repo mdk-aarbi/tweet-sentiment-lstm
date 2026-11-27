@@ -33,7 +33,7 @@ Open the notebook in Google Colab and run all cells. Training takes a few minute
 - Live demo: https://tweet-sentiment-lstm.vercel.app
 - GitHub repository: https://github.com/mdk-aarbi/tweet-sentiment-lstm
 - Assignment report: https://github.com/mdk-aarbi/tweet-sentiment-lstm/blob/main/Assignment_Report.pdf
-- Presentation: https://claude.ai/artifact/5FMzwoKnLn8Y2QHNqinDAq
+- Presentation: https://tweet-sentiment-lstm.vercel.app/slides/
 - Full dataset: https://drive.google.com/file/d/1WandK1pMuvHDLzBgZ--LzfOS7Lv_BcaL/view?usp=drivesdk
 
 ## Credits

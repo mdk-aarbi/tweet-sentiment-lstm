@@ -1,0 +1,63 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tweet Sentiment with LSTMs | Assignment 2 slides</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+section{padding:128px 128px 160px;background:#0E1116;color:#E8ECF1;font-family:'Inter',Arial,sans-serif;display:flex;flex-direction:column;gap:32px}
+section.alt{background:#151A22}
+section.accent{background:#F5B544;color:#0E1116}
+h1,h2,h3{font-family:'Space Grotesk',Arial,sans-serif;margin:0;color:#E8ECF1}
+section.accent h1,section.accent h2,section.accent h3{color:#0E1116}
+h1{font-size:96px;line-height:1.05;font-weight:700}
+h2{font-size:60px;line-height:1.1;font-weight:700}
+h3{font-size:36px;line-height:1.15;font-weight:600}
+p{font-size:32px;line-height:1.4;margin:0;color:#B9C3D0}
+section.accent p{color:#1B2230}
+.eyebrow{font-size:24px;letter-spacing:3px;text-transform:uppercase;color:#F5B544;font-weight:600}
+.cols{display:flex;gap:32px;align-items:stretch}
+.card{flex:1;background:#1B222D;border:2px solid #2A3341;border-radius:16px;padding:40px;display:flex;flex-direction:column;gap:16px}
+.card p{font-size:28px}
+.big{font-family:'Space Grotesk',Arial,sans-serif;font-size:96px;font-weight:700;color:#F5B544;line-height:1}
+.big.teal{color:#4FD1C5}
+.foot{position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7C889A}
+table{width:1664px;border-collapse:collapse;font-size:32px}
+th{text-align:left;color:#F5B544;font-weight:600;padding:20px 24px;border-bottom:2px solid #2A3341}
+td{padding:20px 24px;color:#E8ECF1;border-bottom:1px solid #2A3341}
+ul{margin:0;padding-left:40px;font-size:32px;line-height:1.5;color:#B9C3D0}
+
+html,body{margin:0;height:100%;background:#05070a;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center center}
+#stage section{position:absolute;inset:0;box-sizing:border-box;width:1920px;height:1080px;display:none}
+#stage section.on{display:flex}
+#bar{position:fixed;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:14px;align-items:center;z-index:5;font:600 14px Inter,Arial,sans-serif;color:#9AA6B5}
+#bar button{background:#1B222D;color:#E8ECF1;border:1px solid #2A3341;border-radius:10px;padding:10px 18px;font:600 16px Inter,Arial;cursor:pointer}
+</style></head><body><div id="stage">
+<section id="cover"><p class="eyebrow">Deep Learning · Assignment 2</p><h1>Tweet Sentiment Classification with LSTMs</h1><p>Positive, negative or neutral from raw tweet text, trained from scratch and tested with pretrained GloVe vectors.</p><p class="foot">Muhammad Danial Khalid · BSCS, Superior University, Lahore</p></section>
+
+<section id="task" class="alt"><p class="eyebrow">The task</p><h2>Three-class sentiment on tweets</h2><div class="cols"><div class="card"><h3>Input</h3><p>A short tweet, up to 50 tokens after vectorization.</p></div><div class="card"><h3>Output</h3><p>One of three labels: negative, neutral, positive.</p></div><div class="card"><h3>Model family</h3><p>Recurrent network, specifically a bidirectional LSTM.</p></div></div></section>
+
+<section id="data"><p class="eyebrow">Dataset</p><h2>TweetEval sentiment, a public benchmark</h2><div class="cols"><div class="card"><div class="big">45,615</div><p>training tweets</p></div><div class="card"><div class="big">2,000</div><p>validation tweets</p></div><div class="card"><div class="big">12,284</div><p>test tweets</p></div></div><p>Test labels: 48.33% neutral, 32.34% negative, 19.33% positive. Always predicting neutral already scores 48.33%, so that is the baseline to beat.</p></section>
+
+<section id="pipeline" class="alt"><p class="eyebrow">Pipeline</p><h2>From tweet to prediction</h2><div class="cols"><div class="card"><h3>1. Vectorize</h3><p>Keras TextVectorization, 20,000 tokens, length 50.</p></div><div class="card"><h3>2. Embed</h3><p>100 dimensional embedding with masking of padding.</p></div><div class="card"><h3>3. Encode</h3><p>Bidirectional LSTM, 64 units, dropout 0.5.</p></div><div class="card"><h3>4. Classify</h3><p>Dense layer with softmax over three classes.</p></div></div></section>
+
+<section id="model"><p class="eyebrow">Architecture</p><h2>Why a bidirectional LSTM</h2><ul><li>An LSTM reads the tweet in order and keeps context through its gates.</li><li>Reading both directions lets a word like "not" shape the words after it and before it.</li><li>The final states of both directions are joined and fed to the classifier.</li></ul></section>
+
+<section id="ab" class="alt"><p class="eyebrow">Experiment</p><h2>One change, two models</h2><div class="cols"><div class="card"><h3>Model A</h3><p>Embeddings learned from scratch on the training tweets.</p></div><div class="card"><h3>Model B</h3><p>Embeddings initialised from GloVe Twitter 100d and frozen. 87.9% of the vocabulary is covered.</p></div></div><p>Same architecture, same seed, same training settings. Only the embedding source differs.</p></section>
+
+<section id="results"><p class="eyebrow">Results on the test set</p><h2>Pretrained vectors help</h2><table><tr><th>Model</th><th>Accuracy</th><th>Macro F1</th></tr><tr><td>Majority baseline</td><td>48.33%</td><td>n/a</td></tr><tr><td>A: BiLSTM from scratch</td><td>61.01%</td><td>0.5935</td></tr><tr><td>B: BiLSTM + frozen GloVe</td><td>63.73%</td><td>0.6257</td></tr></table><p>Model B beats the baseline by 15.4 points and Model A by 2.7 points of accuracy.</p></section>
+
+<section id="errors" class="alt"><p class="eyebrow">Error analysis</p><h2>Where the models go wrong</h2><ul><li>The neutral class is the hardest boundary: mild opinions get pulled toward positive or negative.</li><li>Sarcasm and short context-free tweets are often misread.</li><li>Confusion matrices and misclassified examples are saved in the repository.</li></ul></section>
+
+<section id="demo"><p class="eyebrow">Live demo</p><h2>The model runs in your browser</h2><ul><li>Weights are quantized to int8 and shipped as a 2.4 MB file.</li><li>Inference is plain JavaScript, no server, so it works on any device.</li><li>The page is readable by AI agents: llms.txt, results.json and structured data.</li></ul><p>tweet-sentiment-lstm.vercel.app</p></section>
+
+<section id="links" class="accent"><p class="eyebrow" style="color:#0E1116">Deliverables</p><h2>Everything is public</h2><ul style="color:#1B2230"><li>Live demo: tweet-sentiment-lstm.vercel.app</li><li>Code and report: github.com/mdk-aarbi/tweet-sentiment-lstm</li><li>Dataset archive on Google Drive, linked from the site</li></ul><p>Thank you</p></section>
+
+</div><div id="bar"><button id="p">Prev</button><span id="n"></span><button id="x">Next</button></div>
+<script>
+const S=[...document.querySelectorAll('#stage section')];let i=0;
+function show(k){i=Math.max(0,Math.min(S.length-1,k));S.forEach((s,j)=>s.classList.toggle('on',j===i));document.getElementById('n').textContent=(i+1)+' / '+S.length;history.replaceState(null,'','#'+(i+1));}
+function fit(){const k=Math.min(innerWidth/1920,(innerHeight-50)/1080);const st=document.getElementById('stage');st.style.transform='translate(-50%,-50%) scale('+k+')';st.style.top=(innerHeight-50)/2+'px';}
+addEventListener('resize',fit);fit();
+addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key))show(i+1);if(['ArrowLeft','PageUp'].includes(e.key))show(i-1);});
+document.getElementById('x').onclick=()=>show(i+1);document.getElementById('p').onclick=()=>show(i-1);
+let tx=0;addEventListener('touchstart',e=>tx=e.touches[0].clientX);addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)show(i+(d<0?1:-1));});
+show((parseInt(location.hash.slice(1))||1)-1);
+</script></body></html>

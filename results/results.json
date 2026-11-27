@@ -80,7 +80,7 @@
  "links": {
   "github": "https://github.com/mdk-aarbi/tweet-sentiment-lstm",
   "report": "https://github.com/mdk-aarbi/tweet-sentiment-lstm/blob/main/Assignment_Report.pdf",
-  "slides": "https://claude.ai/artifact/5FMzwoKnLn8Y2QHNqinDAq",
+  "slides": "https://tweet-sentiment-lstm.vercel.app/slides/",
   "dataset": "https://drive.google.com/file/d/1WandK1pMuvHDLzBgZ--LzfOS7Lv_BcaL/view?usp=drivesdk",
   "linkedin": "https://lnkd.in/p/dszaAT5e",
   "video": "https://youtu.be/0Ca7wmUae0E"
