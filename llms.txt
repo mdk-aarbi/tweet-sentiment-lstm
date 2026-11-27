@@ -21,6 +21,7 @@
 - report: https://github.com/mdk-aarbi/tweet-sentiment-lstm/blob/main/Assignment_Report.pdf
 - slides: https://claude.ai/artifact/5FMzwoKnLn8Y2QHNqinDAq
 - dataset: https://drive.google.com/file/d/1WandK1pMuvHDLzBgZ--LzfOS7Lv_BcaL/view?usp=drivesdk
+- linkedin: https://www.linkedin.com/feed/update/urn:li:activity:7532068129993089024/
 
 ## How to query the model from a page
 After the page loads, window.__ready is true and window.__predict("some tweet") returns {negative, neutral, positive} probabilities.
